@@ -22,13 +22,6 @@ export async function createContact() {
     return contact;
 }
 
-export async function getContact(id) {
-    await fakeNetwork(`contact:${id}`);
-    let contacts = await localforage.getItem("contacts");
-    let contact = contacts.find(contact => contact.id === id);
-    return contact ?? null;
-}
-
 export async function updateContact(id, updates) {
     await fakeNetwork();
     let contacts = await localforage.getItem("contacts");
@@ -50,11 +43,15 @@ export async function deleteContact(id) {
     return false;
 }
 
+export async function getContact(id) {
+    let contacts = await localforage.getItem("contacts");
+    return contacts.find(contact => contact.id === id);
+}
+
 function set(contacts) {
     return localforage.setItem("contacts", contacts);
 }
 
-// fake a cache so we don't slow down stuff we've already seen
 let fakeCache = {};
 
 async function fakeNetwork(key) {
